@@ -2,11 +2,11 @@ async function shuffle_array(arr,n,draw){
     for (let i = n - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1)), temp;
 
-        await draw(arr,n,i,j);
+        await draw(arr,n,[i,j],"red");
         temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
-        await draw(arr,n,i,j);
+        await draw(arr,n,[i,j]);
     }
     await draw(arr,n);
 }
@@ -15,11 +15,12 @@ async function insertion_sort(arr,n,draw){
     for(let i=0;i<n;i++){
         let pivot = arr[i], j=0;
         for(j=i-1;j>=0 && arr[j]>pivot;j--){
+            await draw(arr,n,[j,j+1],"red");
             arr[j+1]=arr[j];
-            await draw(arr,n,j,j+1);
+            await draw(arr,n,[j,j+1],"white");
         }
         arr[j+1] = pivot;
-        await draw(arr,n,j,j);
+        await draw(arr,n,[j,j]);
     }
 }
 
@@ -42,26 +43,26 @@ async function merge(arr,l,med,r,draw){
     }
 
     while(i<n1 && j<r){
-        await draw(arr,arr.length,qtd,qtd);
+        await draw(arr,arr.length,[qtd,qtd],"red");
         if(left[i]<=arr[j]){
             arr[qtd++] = left[i++];
         }
         else{
             arr[qtd++] = arr[j++];
         }
-        await draw(arr,arr.length,qtd-1,qtd-1);
+        await draw(arr,arr.length,[qtd-1,qtd-1]);
     }
 
     while(i<n1){
-        await draw(arr,arr.length,qtd,qtd);
+        await draw(arr,arr.length,[qtd,qtd],"red");
         arr[qtd++] = left[i++];
-        await draw(arr,arr.length,qtd-1,qtd-1);
+        await draw(arr,arr.length,[qtd-1,qtd-1]);
     }
 
     while(j<r){
-        await draw(arr,arr.length,qtd,qtd);
+        await draw(arr,arr.length,qtd,qtd,"red");
         arr[qtd++] = arr[j++];
-        await draw(arr,arr.length,qtd-1,qtd-1);
+        await draw(arr,arr.length,[qtd-1,qtd-1]);
     }
 }
 
@@ -72,11 +73,11 @@ async function heapsort(arr,n,draw){
     var temp;
     for(let i=n-1;i>0;i--){
 
-        await draw(arr,arr.length,0,i);
+        await draw(arr,arr.length,[0,i]);
         temp = arr[i];
         arr[i] = arr[0];
         arr[0] = temp;
-        await draw(arr,arr.length,0,i);
+        await draw(arr,arr.length,[0,i]);
 
         await max_heapify(arr,i,0,draw);
      }
@@ -95,12 +96,34 @@ async function max_heapify(arr,n,i,draw){
 
         cond = (next!==i);
 
-        await draw(arr,arr.length,i,next);
+        await draw(arr,arr.length,[i,next]);
         temp = arr[next];
         arr[next] = arr[i];
         arr[i] = temp;
-        await draw(arr,arr.length,i,next);
+        await draw(arr,arr.length,[i,next]);
 
         i = next;
     }
+}
+
+async function quicksort(arr,l,r,draw){
+    if(r-l>0){
+        var med = await insert(arr,l,r,draw);
+        await quicksort(arr,l,med-1,draw);
+        await quicksort(arr,med+1,r,draw);
+    }
+}
+
+async function insert(arr,l,r,draw){
+    var top = l, temp;
+    for(let i=l;i<=r;i++){
+        if(arr[i]<=arr[r]){
+            await draw(arr,arr.length,[i,r,top],"red");
+            temp = arr[top];
+            arr[top++] = arr[i];
+            arr[i] = temp; 
+            await draw(arr,arr.length,[i,r,top-1]);
+        }
+    }
+    return top-1;
 }

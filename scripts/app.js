@@ -66,7 +66,7 @@ function draw_array_bars(nums,n,e1,e2){
     }
 }
 
-function update_bars(nums,n,e1,e2){
+function update_bars(nums,n,arr,fillColor){
     var canvas = document.getElementById("canvas");
 
     if(canvas.getContext){
@@ -74,7 +74,7 @@ function update_bars(nums,n,e1,e2){
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
         var desloc = 0, fill = true;
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle = ((fillColor===undefined) ? "white" : fillColor);
         if(baseW>=2){
             baseW = Math.floor(baseW);
             desloc = Math.floor((ctx.canvas.width-baseW*n)/2);
@@ -84,18 +84,16 @@ function update_bars(nums,n,e1,e2){
             fill = false;
         }
 
-        ctx.clearRect(baseW*e1+desloc,0,baseW+ctx.lineWidth,canvas.height);
-        if(fill) ctx.fillRect(baseW*e1+desloc+.5,top-nums[e1]*top/n,baseW,nums[e1]*top/n);
-        ctx.strokeRect(baseW*e1+desloc+.5,top-nums[e1]*top/n,baseW,nums[e1]*top/n);
-
-        ctx.clearRect(baseW*e2+desloc,0,baseW+ctx.lineWidth,canvas.height);
-        if(fill) ctx.fillRect(baseW*e2+desloc+.5,top-nums[e2]*top/n,baseW,nums[e2]*top/n);
-        ctx.strokeRect(baseW*e2+desloc+.5,top-nums[e2]*top/n,baseW,nums[e2]*top/n);
+        for(let i=0;i<arr.length;i++){
+            ctx.clearRect(baseW*arr[i]+desloc,0,baseW+ctx.lineWidth,canvas.height);
+            if(fill) ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+        }
     }
 }
 
-async function draw_wrapper(arr,n,i,j){
-    update_bars(arr,n,i,j);
+async function draw_wrapper(arr,n,opt,fillColor){
+    update_bars(arr,n,opt,fillColor);
     await sleep(1);
 }
 
@@ -114,6 +112,9 @@ async function sort_sel(arr,n){
     }
     else if(alg==="Heap Sort"){
         await heapsort(arr,n,draw_wrapper);
+    }
+    else if(alg==="Quicksort"){
+        await quicksort(arr,0,n-1,draw_wrapper);
     }
 
     document.getElementById("sort-button").style.zIndex = 0;
@@ -146,7 +147,7 @@ function options(){
     include("scripts/include_test.js");
     await sleep(1);
 
-    var n = 100;
+    var n = 1000;
     var nums = generate_array(n);
 
     //start routine
@@ -161,3 +162,5 @@ function options(){
     document.getElementById("shuffle-button").addEventListener('click',()=>shuffle_array(nums,n,draw_wrapper),false);
     document.getElementById("options-button").addEventListener('click',options,false);
 })()
+
+var a = Array.from(generate_array(10),i=>10-i);

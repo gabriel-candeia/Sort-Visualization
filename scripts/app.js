@@ -28,13 +28,12 @@ function resize_canvas(){
 
 function draw_array_bars(nums,n,e1,e2){
     //TODO: Transformar essa função em duas
-
     var canvas = document.getElementById("canvas");
 
     if(canvas.getContext){
         var ctx = canvas.getContext("2d");
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
-        var desloc = 0, fill = true;
+        var desloc = 0, stroke = true;
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
         if(baseW>=2){
@@ -43,25 +42,12 @@ function draw_array_bars(nums,n,e1,e2){
         }
         else{
             ctx.strokeStyle="white"
-            fill = false;
+            stroke = false;
         }
 
         for(let i=0, acm=0;i<n;i++,acm+=baseW){
-            if(i===e1||i===e2){
-                ctx.fillStyle = "red";
-                if(baseW<2){
-                    ctx.strokeStyle = "red";
-                }
-            }
-            if(fill) ctx.fillRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
-            ctx.strokeRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
-            if(i===e1||i===e2){
-                ctx.fillStyle = "white";
-                ctx.strokeStyle = "black";
-                if(baseW<2){
-                    ctx.strokeStyle = "white";
-                }
-            }
+            ctx.fillRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
+            if(stroke) ctx.strokeRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
         }
     }
 }
@@ -72,7 +58,7 @@ function update_bars(nums,n,arr,fillColor){
     if(canvas.getContext){
         var ctx = canvas.getContext("2d");
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
-        var desloc = 0, fill = true;
+        var desloc = 0, stroke = true;
 
         ctx.fillStyle = ((fillColor===undefined) ? "white" : fillColor);
         if(baseW>=2){
@@ -81,13 +67,13 @@ function update_bars(nums,n,arr,fillColor){
         }
         else{
             ctx.strokeStyle="white"
-            fill = false;
+            stroke = false;
         }
 
         for(let i=0;i<arr.length;i++){
             ctx.clearRect(baseW*arr[i]+desloc,0,baseW+ctx.lineWidth,canvas.height);
-            if(fill) ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
-            ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            if(stroke) ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
         }
     }
 }
@@ -115,6 +101,9 @@ async function sort_sel(arr,n){
     }
     else if(alg==="Quicksort"){
         await quicksort(arr,0,n-1,draw_wrapper);
+    }
+    else if(alg==="Bubble Sort"){
+        await bubble_sort(arr,n,draw_wrapper)
     }
 
     document.getElementById("sort-button").style.zIndex = 0;
@@ -147,7 +136,7 @@ function options(){
     include("scripts/include_test.js");
     await sleep(1);
 
-    var n = 1000;
+    var n = 300;
     var nums = generate_array(n);
 
     //start routine

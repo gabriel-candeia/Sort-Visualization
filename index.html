@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title> Sort Viz. </title>
+
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="background-container">
+        <div id="options-container">
+            <ul>
+                <li>
+                    <select id="alg-selector">
+                        <option>Insertion Sort</option>
+                        <option>Merge Sort</option>
+                        <option>Heap Sort</option>
+                    </select>
+                </li>
+                <li>
+                    Width<br> 
+                    <input type="range" id="range-selector" min = "50" max = "600" value="500" oninput = "range_event()">
+                </li>
+            </ul>
+        </div>
+        <div class="heading" id="heading">
+            <h1><span class="text-button leftal" id = "sort-button">Sort</span>&nbsp<span class="text-button" id="options-button">Viz.</span></h1>
+            <h1><span class="text-button rightal" id="shuffle-button">Shuffle</span></h1>
+        </div>
+        <div id="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

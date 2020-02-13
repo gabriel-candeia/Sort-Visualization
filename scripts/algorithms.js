@@ -129,23 +129,17 @@ async function insert(arr,l,r,draw){
 }
 
 async function bubble_sort(arr,n,draw){
-    //TODO: Currently the animation looks weird, problem might be related to how the draw function is called
-    
-    var temp, mIndex;
-    for(let i=n;i>1;i--){
+    var temp;
+    for(let i=n-1;i;i--){
         mIndex=i-1;
-        for(let j=i-1;j>=0;j--){
-            if(arr[j]>arr[mIndex]){
-                await draw(arr,n,[j,mIndex],"red");
-                mIndex = j;    
-                await draw(arr,n,[j,mIndex]);
+        for(let j=0;j<i;j++){
+            if(arr[j]>arr[j+1]){
+                await draw(arr,n,[j,j+1],"red");
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+                await draw(arr,n,[j,j+1]);
             }
         }
-
-        await draw(arr,n,[i-1,mIndex]);
-        temp = arr[i-1];
-        arr[i-1] = arr[mIndex];
-        arr[mIndex] = temp;
-        await draw(arr,n,[i-1,mIndex]);
     }
 }

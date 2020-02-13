@@ -16,7 +16,7 @@ function resize_canvas(){
     ctx.canvas.height = window.innerHeight-document.getElementById("heading").style.height-70;
 }
 
-function draw_array_bars(nums,n,e1,e2){
+function draw_array_bars(nums,n){
     //TODO: Transformar essa função em duas
     var canvas = document.getElementById("canvas");
 
@@ -50,20 +50,22 @@ function update_bars(nums,n,arr,fillColor){
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
         var desloc = 0, stroke = true;
 
-        ctx.fillStyle = ((fillColor===undefined) ? "white" : fillColor);
         if(baseW>=2){
+            ctx.fillStyle = ((fillColor===undefined) ? "white" : fillColor);
             baseW = Math.floor(baseW);
             desloc = Math.floor((ctx.canvas.width-baseW*n)/2);
+
+            for(let i=0;i<arr.length;i++){
+                ctx.clearRect(baseW*arr[i]+desloc,0,baseW+ctx.lineWidth,canvas.height);
+                ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+                if(stroke) ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            }
         }
         else{
-            ctx.strokeStyle="white"
-            stroke = false;
-        }
-
-        for(let i=0;i<arr.length;i++){
-            ctx.clearRect(baseW*arr[i]+desloc,0,baseW+ctx.lineWidth,canvas.height);
-            ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
-            if(stroke) ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            for(let i=0, acm=0;i<n;i++,acm+=baseW){
+                ctx.fillRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
+            }
         }
     }
 }

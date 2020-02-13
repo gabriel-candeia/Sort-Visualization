@@ -88,6 +88,7 @@ async function sort_sel(arr,n){
 
     document.getElementById("sort-button").style.zIndex = -1;
     document.getElementById("shuffle-button").style.zIndex = -1;
+    document.getElementById("range-selector").style.visibility = "hidden";
 
     var alg = document.getElementById("alg-selector").value;
     if(alg==="Insertion Sort"){
@@ -108,6 +109,7 @@ async function sort_sel(arr,n){
 
     document.getElementById("sort-button").style.zIndex = 0;
     document.getElementById("shuffle-button").style.zIndex = 0;
+    document.getElementById("range-selector").style.visibility = "visible";
     draw_array_bars(arr,n);
 }
 
@@ -116,17 +118,21 @@ function options(){
 
     var optionsMenu = document.getElementById("options-container");
 
-    if(optionsMenu.style.width==="0px"){
-        optionsMenu.style.width="200px";
-        document.getElementById("shuffle-button").style.visibility = "hidden";
-        document.getElementById("sort-button").style.visibility = "hidden";
+    if(optionsMenu.style.height==="0px"){
+        optionsMenu.style.height="300px";
+        document.getElementById("sort-button").style.zIndex = -1;
     }
     else{
-        optionsMenu.style.width="0px";
-        document.getElementById("shuffle-button").style.visibility = "visible";
-        document.getElementById("sort-button").style.visibility = "visible";
+        optionsMenu.style.height="0px";
+        document.getElementById("sort-button").style.zIndex = 0;
     }
     
+}
+
+function reset_n(param){
+    param.n = parseInt(document.getElementById("range-selector").value);
+    param.nums = generate_array(param.n);
+    draw_array_bars(param.nums,param.n);
 }
 
 (async function(){
@@ -136,20 +142,21 @@ function options(){
     include("scripts/include_test.js");
     await sleep(1);
 
-    var n = 300;
-    var nums = generate_array(n);
+    document.getElementById("range-selector").value = "50";
+    var param = {n:50, nums:generate_array(50)};
 
     //start routine
     resize_canvas();
-    draw_array_bars(nums,n);
+    draw_array_bars(param.nums,param.n);
     options();
     
     //event handling
     window.addEventListener('resize',resize_canvas,false);
-    window.addEventListener('resize',()=>draw_array_bars(nums,n),false);
-    document.getElementById("sort-button").addEventListener('click',()=>sort_sel(nums,n),false);
-    document.getElementById("shuffle-button").addEventListener('click',()=>shuffle_array(nums,n,draw_wrapper),false);
+    window.addEventListener('resize',()=>draw_array_bars(param.nums,param.n),false);
+    document.getElementById("sort-button").addEventListener('click',()=>sort_sel(param.nums,param.n),false);
+    document.getElementById("shuffle-button").addEventListener('click',()=>shuffle_array(param.nums,param.n,draw_wrapper),false);
     document.getElementById("options-button").addEventListener('click',options,false);
+    document.getElementById("range-selector").addEventListener('input',()=>reset_n(param),false);
 })()
 
 var a = Array.from(generate_array(10),i=>10-i);

@@ -15,12 +15,12 @@ async function insertion_sort(arr,n,draw){
     for(let i=0;i<n;i++){
         let pivot = arr[i], j=0;
         for(j=i-1;j>=0 && arr[j]>pivot;j--){
-            await draw(arr,n,[j,j+1],"red");
+            await draw(arr,n,[j+1],"red");
             arr[j+1]=arr[j];
-            await draw(arr,n,[j,j+1],"white");
+            await draw(arr,n,[j+1],"white");
         }
         arr[j+1] = pivot;
-        await draw(arr,n,[j,j]);
+        await draw(arr,n,[j+1]);
     }
 }
 

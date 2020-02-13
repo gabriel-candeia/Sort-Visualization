@@ -10,4 +10,3 @@ A repo for a simple sorting algorithm visualization program I did to learn Javas
 * Improve sidenav and menu
 * Improve the color of the bars during sorting
 * Add more sorting functions
-* Fix button-bugs on Google Chrome

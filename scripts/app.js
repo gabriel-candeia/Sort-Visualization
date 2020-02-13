@@ -1,16 +1,6 @@
-function include(filePath){
-    var script = document.createElement("script");
-    script.src = filePath;
-    script.type = 'text/javascript'; 
-    script.defer = true;
-
-    document.body.appendChild(script);
-}
-
 function sleep(t){
     return new Promise(r => setTimeout(r, t));
 }
-
 
 function generate_array(n){
     return Array.from(Array(n).keys(), i => (i+1));
@@ -135,13 +125,7 @@ function reset_n(param){
     draw_array_bars(param.nums,param.n);
 }
 
-(async function(){
-    /*TODO: Figure out how to make this function synchronous.*/
-    
-    include("scripts/algorithms.js");
-    include("scripts/include_test.js");
-    await sleep(1);
-
+(function(){
     document.getElementById("range-selector").value = "50";
     var param = {n:50, nums:generate_array(50)};
 
@@ -158,5 +142,3 @@ function reset_n(param){
     document.getElementById("options-button").addEventListener('click',options,false);
     document.getElementById("range-selector").addEventListener('input',()=>reset_n(param),false);
 })()
-
-var a = Array.from(generate_array(10),i=>10-i);

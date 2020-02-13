@@ -8,7 +8,7 @@ async function shuffle_array(arr,n,draw){
         arr[j] = temp;
         await draw(arr,n,[i,j]);
     }
-    await draw(arr,n);
+    await draw(arr,n,[]);
 }
 
 async function insertion_sort(arr,n,draw){

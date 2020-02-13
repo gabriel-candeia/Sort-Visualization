@@ -5,6 +5,7 @@ body{
     padding: 0px;
     font-family: 'Oxygen', sans-serif;
     animation: colorCycle 10s infinite;
+    user-select: none;
 }
 
 #background-container{
@@ -37,12 +38,8 @@ h1{
 
 #options-container{
     position: absolute;
-
-    animation: options-background-animation 14s infinite;
     background: black;
     width: 200px;
-    height: 0px;
-
     color: white;
     overflow: hidden;
     transition: all 400ms ease-in-out;
@@ -61,7 +58,6 @@ h1{
     list-style: none;
     margin: 10px 0px 0px 20px;
     font-size: 20px;
-    user-select: none;
 }
 
 #options-container ul li:hover{
@@ -79,8 +75,13 @@ select{
     -webkit-appearance: none;
 }
 
+option{
+    background-color: black;
+}
+
 #range-selector{
     width: 140px;
+    direction: rtl;
 }
 
 #rangebox{
@@ -89,9 +90,7 @@ select{
 
 .text-button{
     position: absolute;
-    background: linear-gradient(to right,white 30%, rgb(228, 35, 170),white);
-    background-size: 400% 400%;
-    color: transparent;
+    color: white;
     background-clip: text;
     position: relative;
     transition: all 40ms linear;
@@ -99,12 +98,6 @@ select{
 
 canvas{
     display: block;
-}
-
-@keyframes options-background-animation {
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
 }
 
 @keyframes colorCycle {

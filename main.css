@@ -41,7 +41,7 @@ h1{
     animation: options-background-animation 14s infinite;
     background: black;
     width: 200px;
-    height: 100%;
+    height: 0px;
 
     color: white;
     overflow: hidden;
@@ -50,25 +50,42 @@ h1{
 
 #options-container ul{
     list-style: none;
-    padding-top: 40%;
-    padding-left: 0px;
+    padding: 40% 0px 0px 0px;
 }
 
 #options-container ul li{
+    text-align: center;
     display: block;
+    width: 150px;
+    line-height: 50px;
     list-style: none;
-    margin: 0px 0px 0px 20px;
+    margin: 10px 0px 0px 20px;
+    font-size: 20px;
+    user-select: none;
+}
+
+#options-container ul li:hover{
+    background: rgba(49, 47, 47, 0.767);
+    box-shadow: 0px 5px 10px rgba(49, 47, 47, 0.767);
 }
 
 select{
     font-size: 20px;
-    background: rgb(49, 47, 47);
+    text-align: center;
+    background: transparent;
     color: white;
     border: none;
     -moz-appearance: none;
     -webkit-appearance: none;
 }
 
+#range-selector{
+    width: 140px;
+}
+
+#rangebox{
+    height: 80px;
+}
 
 .text-button{
     position: absolute;
@@ -77,7 +94,7 @@ select{
     color: transparent;
     background-clip: text;
     position: relative;
-    transition: all 0s linear;
+    transition: all 40ms linear;
 }
 
 canvas{

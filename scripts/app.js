@@ -28,13 +28,12 @@ function resize_canvas(){
 
 function draw_array_bars(nums,n,e1,e2){
     //TODO: Transformar essa função em duas
-
     var canvas = document.getElementById("canvas");
 
     if(canvas.getContext){
         var ctx = canvas.getContext("2d");
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
-        var desloc = 0, fill = true;
+        var desloc = 0, stroke = true;
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
         if(baseW>=2){
@@ -43,25 +42,12 @@ function draw_array_bars(nums,n,e1,e2){
         }
         else{
             ctx.strokeStyle="white"
-            fill = false;
+            stroke = false;
         }
 
         for(let i=0, acm=0;i<n;i++,acm+=baseW){
-            if(i===e1||i===e2){
-                ctx.fillStyle = "red";
-                if(baseW<2){
-                    ctx.strokeStyle = "red";
-                }
-            }
-            if(fill) ctx.fillRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
-            ctx.strokeRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
-            if(i===e1||i===e2){
-                ctx.fillStyle = "white";
-                ctx.strokeStyle = "black";
-                if(baseW<2){
-                    ctx.strokeStyle = "white";
-                }
-            }
+            ctx.fillRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
+            if(stroke) ctx.strokeRect(acm+desloc+.5,top-nums[i]*top/n,baseW,nums[i]*top/n);
         }
     }
 }
@@ -72,7 +58,7 @@ function update_bars(nums,n,arr,fillColor){
     if(canvas.getContext){
         var ctx = canvas.getContext("2d");
         var top = ctx.canvas.height, baseW = (ctx.canvas.width)/n;
-        var desloc = 0, fill = true;
+        var desloc = 0, stroke = true;
 
         ctx.fillStyle = ((fillColor===undefined) ? "white" : fillColor);
         if(baseW>=2){
@@ -81,13 +67,13 @@ function update_bars(nums,n,arr,fillColor){
         }
         else{
             ctx.strokeStyle="white"
-            fill = false;
+            stroke = false;
         }
 
         for(let i=0;i<arr.length;i++){
             ctx.clearRect(baseW*arr[i]+desloc,0,baseW+ctx.lineWidth,canvas.height);
-            if(fill) ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
-            ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            ctx.fillRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
+            if(stroke) ctx.strokeRect(baseW*arr[i]+desloc+.5,top-nums[arr[i]]*top/n,baseW,nums[arr[i]]*top/n);
         }
     }
 }
@@ -102,6 +88,7 @@ async function sort_sel(arr,n){
 
     document.getElementById("sort-button").style.zIndex = -1;
     document.getElementById("shuffle-button").style.zIndex = -1;
+    document.getElementById("range-selector").style.visibility = "hidden";
 
     var alg = document.getElementById("alg-selector").value;
     if(alg==="Insertion Sort"){
@@ -116,9 +103,13 @@ async function sort_sel(arr,n){
     else if(alg==="Quicksort"){
         await quicksort(arr,0,n-1,draw_wrapper);
     }
+    else if(alg==="Bubble Sort"){
+        await bubble_sort(arr,n,draw_wrapper)
+    }
 
     document.getElementById("sort-button").style.zIndex = 0;
     document.getElementById("shuffle-button").style.zIndex = 0;
+    document.getElementById("range-selector").style.visibility = "visible";
     draw_array_bars(arr,n);
 }
 
@@ -127,17 +118,21 @@ function options(){
 
     var optionsMenu = document.getElementById("options-container");
 
-    if(optionsMenu.style.width==="0px"){
-        optionsMenu.style.width="200px";
-        document.getElementById("shuffle-button").style.visibility = "hidden";
-        document.getElementById("sort-button").style.visibility = "hidden";
+    if(optionsMenu.style.height==="0px"){
+        optionsMenu.style.height="300px";
+        document.getElementById("sort-button").style.zIndex = -1;
     }
     else{
-        optionsMenu.style.width="0px";
-        document.getElementById("shuffle-button").style.visibility = "visible";
-        document.getElementById("sort-button").style.visibility = "visible";
+        optionsMenu.style.height="0px";
+        document.getElementById("sort-button").style.zIndex = 0;
     }
     
+}
+
+function reset_n(param){
+    param.n = parseInt(document.getElementById("range-selector").value);
+    param.nums = generate_array(param.n);
+    draw_array_bars(param.nums,param.n);
 }
 
 (async function(){
@@ -147,20 +142,21 @@ function options(){
     include("scripts/include_test.js");
     await sleep(1);
 
-    var n = 1000;
-    var nums = generate_array(n);
+    document.getElementById("range-selector").value = "50";
+    var param = {n:50, nums:generate_array(50)};
 
     //start routine
     resize_canvas();
-    draw_array_bars(nums,n);
+    draw_array_bars(param.nums,param.n);
     options();
     
     //event handling
     window.addEventListener('resize',resize_canvas,false);
-    window.addEventListener('resize',()=>draw_array_bars(nums,n),false);
-    document.getElementById("sort-button").addEventListener('click',()=>sort_sel(nums,n),false);
-    document.getElementById("shuffle-button").addEventListener('click',()=>shuffle_array(nums,n,draw_wrapper),false);
+    window.addEventListener('resize',()=>draw_array_bars(param.nums,param.n),false);
+    document.getElementById("sort-button").addEventListener('click',()=>sort_sel(param.nums,param.n),false);
+    document.getElementById("shuffle-button").addEventListener('click',()=>shuffle_array(param.nums,param.n,draw_wrapper),false);
     document.getElementById("options-button").addEventListener('click',options,false);
+    document.getElementById("range-selector").addEventListener('input',()=>reset_n(param),false);
 })()
 
 var a = Array.from(generate_array(10),i=>10-i);

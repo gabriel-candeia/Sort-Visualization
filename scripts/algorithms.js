@@ -15,12 +15,12 @@ async function insertion_sort(arr,n,draw){
     for(let i=0;i<n;i++){
         let pivot = arr[i], j=0;
         for(j=i-1;j>=0 && arr[j]>pivot;j--){
-            await draw(arr,n,[j,j+1],"red");
+            await draw(arr,n,[j+1],"red");
             arr[j+1]=arr[j];
-            await draw(arr,n,[j,j+1],"white");
+            await draw(arr,n,[j+1],"white");
         }
         arr[j+1] = pivot;
-        await draw(arr,n,[j,j]);
+        await draw(arr,n,[j+1]);
     }
 }
 
@@ -126,4 +126,26 @@ async function insert(arr,l,r,draw){
         }
     }
     return top-1;
+}
+
+async function bubble_sort(arr,n,draw){
+    //TODO: Currently the animation looks weird, problem might be related to how the draw function is called
+    
+    var temp, mIndex;
+    for(let i=n;i>1;i--){
+        mIndex=i-1;
+        for(let j=i-1;j>=0;j--){
+            if(arr[j]>arr[mIndex]){
+                await draw(arr,n,[j,mIndex],"red");
+                mIndex = j;    
+                await draw(arr,n,[j,mIndex]);
+            }
+        }
+
+        await draw(arr,n,[i-1,mIndex]);
+        temp = arr[i-1];
+        arr[i-1] = arr[mIndex];
+        arr[mIndex] = temp;
+        await draw(arr,n,[i-1,mIndex]);
+    }
 }
